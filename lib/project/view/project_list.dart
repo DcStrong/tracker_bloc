@@ -4,6 +4,7 @@ import 'package:tracker_bloc/branche/view/branch.dart';
 import 'package:tracker_bloc/project/bloc/project_bloc.dart';
 import 'package:tracker_bloc/project/bloc/project_event.dart';
 import 'package:tracker_bloc/project/bloc/project_state.dart';
+import 'package:tracker_bloc/project/model/project_model.dart';
 
 class ProjectList extends StatelessWidget {
   const ProjectList({Key? key}) : super(key: key);
@@ -12,43 +13,71 @@ class ProjectList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            TextButton(
-              onPressed: () {
-                context
-                  .read<ProjectBloc>()
-                  .add(LoadingProject());
-              },
-              child: Text('get'),
+        if (state is ProjectLoaded)
+          return Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: state.projects.length,
+              itemBuilder: (ctx, i) {
+                return projectCard(ctx, state.projects[i]);
+              }
             ),
-            if (state is ProjectLoaded)
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: state.projects.length,
-                itemBuilder: (ctx, i) {
-                  return Column(
-                    children: [
-                      Text(state.projects[i].name),
-                      Text(state.projects[i].loadingBranches.toString()),
-                      Checkbox(
-                        value: state.projects[i].loadingBranches,
-                        onChanged: (bool? value) {
-                          context
-                            .read<ProjectBloc>()
-                            .add(UpdatedProject(state.projects[i].copyWith(loadingBranches: !state.projects[i].loadingBranches!)));
-                        }
-                      ),
-                      BranchList(),
-                    ],
-                  );
-                }
-              ),
-            ),
-          ],
-        );
+          );
+        return Container();
       },
     );
   }
+
+  Widget projectCard(BuildContext context, Project project) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          ListTile(
+            leading: Icon(Icons.arrow_drop_down_circle),
+            title: Text(project.name),
+            subtitle: Text(
+              'Secondary Text',
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+            ),
+          ),
+          ExpansionTile(
+            onExpansionChanged: (bool value) {
+              if (value) {
+                if (project.brances == null) {
+                  context
+                    .read<ProjectBloc>()
+                    .add(LoadingBranch(project));
+                }
+              }
+            },
+            title: Text('Branch'),
+            children:
+              project.brances != null
+              ? [BranchList(branchList: project.brances!)]
+              : [CircularProgressIndicator()]
+          ),
+          ButtonBar(
+            alignment: MainAxisAlignment.start,
+            children: [
+              TextButton(
+                onPressed: () {
+                  // Perform some action
+                },
+                child: const Text('ACTION 1'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Perform some action
+                },
+                child: const Text('ACTION 2'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+

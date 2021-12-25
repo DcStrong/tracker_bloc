@@ -1,23 +1,23 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:tracker_bloc/branche/model/branche.dart';
+import 'package:tracker_bloc/branche/model/branch_model.dart';
 import 'package:tracker_bloc/project/entity/project_entity.dart';
 
 @immutable
 class Project extends Equatable {
   final int id;
   final String name;
-  final List<BrancheModel>? brances;
+  final List<BranchModel>? brances;
   bool? loadingBranches;
 
   Project({
     required this.id,
     required this.name,
     this.loadingBranches = false,
-    List<BrancheModel>? brances,
+    List<BranchModel>? brances,
   }) : this.brances = brances ?? null;
 
-  Project copyWith({List<BrancheModel>? brances, bool? loadingBranches}) {
+  Project copyWith({List<BranchModel>? brances, bool? loadingBranches}) {
     return Project(
       id: id,
       name: name,

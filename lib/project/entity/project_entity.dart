@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:tracker_bloc/branche/model/branche.dart';
+import 'package:tracker_bloc/branche/model/branch_model.dart';
 
 class ProjectEntity extends Equatable {
   final int id;
   final String name;
-  final List<BrancheModel>? branchs;
+  final List<BranchModel>? branchs;
 
   const ProjectEntity({
     required this.id,
