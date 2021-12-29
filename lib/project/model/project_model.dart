@@ -8,7 +8,7 @@ class Project extends Equatable {
   final int id;
   final String name;
   final List<BranchModel>? brances;
-  bool? loadingBranches;
+  final bool? loadingBranches;
 
   Project({
     required this.id,
