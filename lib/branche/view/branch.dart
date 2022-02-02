@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:tracker_bloc/branche/model/branch_model.dart';
 
@@ -10,11 +8,10 @@ class BranchList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: true,
-      itemCount: branchList.length,
-      itemBuilder: (ctx, i) {
-        return Text(branchList[i].name);
-      }
-    );
+        shrinkWrap: true,
+        itemCount: branchList.length,
+        itemBuilder: (ctx, i) {
+          return Text(branchList[i].name);
+        });
   }
 }

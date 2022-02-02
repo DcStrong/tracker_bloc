@@ -16,16 +16,51 @@ class ProjectList extends StatelessWidget {
         if (state is ProjectLoaded)
           return Expanded(
             child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: state.projects.length,
-              itemBuilder: (ctx, i) {
-                return projectCard(ctx, state.projects[i]);
-              }
-            ),
+                shrinkWrap: true,
+                itemCount: state.projects.length,
+                itemBuilder: (ctx, i) {
+                  // return projectCard(ctx, state.projects[i]);
+                  return tileItem(context, i, state.projects[i]);
+                }),
           );
         return Container();
       },
     );
+  }
+
+  Widget tileItem(BuildContext context, int index, Project project) {
+    return Hero(
+        tag: 'card$index',
+        child: Stack(
+          children: [
+            Material(
+                type: MaterialType.transparency,
+                child: projectCard(context, project)),
+            Positioned(
+              left: 0.0,
+              top: 0.0,
+              bottom: 0.0,
+              right: 0.0,
+              child: Material(
+                type: MaterialType.transparency,
+                child: InkWell(
+                    // onTap: () async {
+                    //   await Future.delayed(Duration(milliseconds: 200));
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) {
+                    //         return detailCardProject(index);
+                    //       },
+                    //       fullscreenDialog: true,
+                    //     ),
+                    //   );
+                    // },
+                    ),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget projectCard(BuildContext context, Project project) {
@@ -42,21 +77,17 @@ class ProjectList extends StatelessWidget {
             ),
           ),
           ExpansionTile(
-            onExpansionChanged: (bool value) {
-              if (value) {
-                if (project.brances == null) {
-                  context
-                    .read<ProjectBloc>()
-                    .add(LoadingBranch(project));
+              onExpansionChanged: (bool value) {
+                if (value) {
+                  if (project.brances == null) {
+                    context.read<ProjectBloc>().add(LoadingBranch(project));
+                  }
                 }
-              }
-            },
-            title: Text('Branch'),
-            children:
-              project.brances != null
-              ? [BranchList(branchList: project.brances!)]
-              : [CircularProgressIndicator()]
-          ),
+              },
+              title: Text('Branch'),
+              children: project.brances != null
+                  ? [BranchList(branchList: project.brances!)]
+                  : [CircularProgressIndicator()]),
           ButtonBar(
             alignment: MainAxisAlignment.start,
             children: [
@@ -78,6 +109,15 @@ class ProjectList extends StatelessWidget {
       ),
     );
   }
+
+  Widget detailCardProject(int index) {
+    return Hero(
+      tag: 'card$index',
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white.withOpacity(0.2),
+        ),
+      ),
+    );
+  }
 }
-
-

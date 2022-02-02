@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:tracker_bloc/branche/entity/branch_entity.dart';
 import 'package:tracker_bloc/branche/model/branch_model.dart';
 
 class ProjectEntity extends Equatable {
@@ -16,7 +17,7 @@ class ProjectEntity extends Equatable {
     return {
       'id': id,
       'name': name,
-      'branchs': branchs,
+      'branchs': branchs?.map((e) => e.toEntity().toJson()).toList(),
     };
   }
 
@@ -27,6 +28,15 @@ class ProjectEntity extends Equatable {
     return ProjectEntity(
       id: json['id'] as int,
       name: json['name'] as String,
+      branchs: json['branchs'] != null
+          ? _branchsFromJson(json['branchs'])
+          : json['branchs'],
     );
+  }
+
+  static List<BranchModel> _branchsFromJson(List branches) {
+    return branches
+        .map((e) => BranchModel.fromEntity(BranchEntity.fromJson(e)))
+        .toList();
   }
 }

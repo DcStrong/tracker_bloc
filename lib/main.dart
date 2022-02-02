@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tracker_bloc/branche/branch_repository.dart';
+import 'package:tracker_bloc/helper/shared_preferences.dart';
 import 'package:tracker_bloc/project/bloc/project_bloc.dart';
 import 'package:tracker_bloc/project/project_repository.dart';
 import 'package:tracker_bloc/project/view/project_list.dart';
@@ -20,27 +21,25 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider(
           create: (context) => BranchRepository(),
-        )
+        ),
+        RepositoryProvider(
+          create: (context) => SharedPreferencess(),
+        ),
       ],
       child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (ctx) {
-              return ProjectBloc(
-                ctx.read<ProjectRepository>(),
-                ctx.read<BranchRepository>()
-              );
-            }
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: HomePage(),
-        )
-      ),
+          providers: [
+            BlocProvider(create: (ctx) {
+              return ProjectBloc(ctx.read<ProjectRepository>(),
+                  ctx.read<BranchRepository>(), ctx.read<SharedPreferencess>());
+            }),
+          ],
+          child: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: HomePage(),
+          )),
     );
   }
 }
